@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Gas Usage Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clifford: '#da373d',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1 class="text-center font-bold m-10 text-4xl">Destination Calculator</h1>
+
+    <div class="w-[700px] p-10 mx-auto bg-gray-100 rounded-lg">
+        <div class="flex justify-between">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
+                    Start
+                    Point</label>
+                <select id="startPoint"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-10">
+                    <option selected disabled hidden>Choose a Start Point</option>
+                    <option value="KoreaSoftwareHRDCenter">Korea Software HRD Center</option>
+                    <option value="RiverSide">River Side</option>
+                    <option value="PochentongAirport">Pochentong Airport</option>
+                    <option value="AeonMall1">Aeon Mall 1</option>
+                </select>
+            </div>
+            <div class="text-center py-8">
+                <h1>To</h1>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
+                    Endpoint</label>
+                <select id="endPoint"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-10">
+                    <option selected disabled hidden>Choose a End Point</option>
+                    <option value="AeonMallSenSok">Aeon Mall Sen Sok</option>
+                    <option value="AmazonKPK">Amazon KPK</option>
+                    <option value="PidaoCafe">Pidao Cafe</option>
+                    <option value="EdenGarden">Eden Garden</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="w-full flex">
+            <span>Total Distination :</span>
+            <span class="px-10" id="totalDistance">0 km</span>
+        </div>
+
+
+        <div class="my-5">
+            <input type="text" placeholder="0 km/h" id="avgSpeed" class="rounded-lg px">
+            <label class="px-5">Average Speed</label>
+        </div>
+        <div class="my-5">
+            <input type="text" id="fuelEffiency" class="rounded-lg px" placeholder="0 liters/h">
+            <label class="px-5">Fuel Efficiency</label>
+        </div>
+        <div class="my-5">
+            <input type="text" id="currentFuelLevel" class="rounded-lg px" placeholder="0 liters">
+            <label class="px-5">Current Fuel Level</label>
+        </div>
+
+
+        <div class="w-full  mx-auto my-14">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold">Duration</h3>
+            </div>
+            <div class="flex justify-evenly my-8">
+                <p>Time : <span id="countTime">0h 0m 0s</span></p>
+                <div id="stopInfo">
+                    <p>Distance Travel : <span id="distanceTravel">0 </span>Km</p>
+                </div>
+            </div>
+            <div class="flex justify-evenly ">
+                <p>Remainging Time Until Arrive : <span id="RemainingTime">0h 0m 0s</span></p>
+
+                <div id="remainingFuelInfo">
+                    <p>Remaing Fuel : <span id="remainingFuel">0</span> Liters</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="flex justify-evenly  items-center">
+            <button type="button" id="btnStart"
+                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Start</button>
+
+            <button type="button" id="btnStop"
+                class="focus:outline-none text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Stop</button>
+        </div>
+        <div class="w-full flex justify-center items-center">
+            <button type="button" id="btnClear"
+                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Clear</button>
+        </div>
+    </div>
+
+
+
+
+    <script src="./DestinationCalculator.js"></script>
+</body>
+
+</html>
