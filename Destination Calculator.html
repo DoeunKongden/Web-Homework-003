@@ -18,6 +18,9 @@
             }
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -82,10 +85,10 @@
             <div class="flex justify-evenly my-8">
                 <p>Time : <span id="countTime">0h 0m 0s</span></p>
                 <div id="stopInfo">
-                    <p>Distance Travel : <span id="distanceTravel">0 </span>Km</p>
+                    <p>Distance Travel : <span id="distanceTravel">0 </span></p>
                 </div>
             </div>
-            <div class="flex justify-evenly ">
+            <div id="fuelAndTimeInfo" class="flex justify-evenly ">
                 <p>Remainging Time Until Arrive : <span id="RemainingTime">0h 0m 0s</span></p>
 
                 <div id="remainingFuelInfo">
@@ -101,8 +104,6 @@
 
             <button type="button" id="btnStop"
                 class="focus:outline-none text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Stop</button>
-        </div>
-        <div class="w-full flex justify-center items-center">
             <button type="button" id="btnClear"
                 class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Clear</button>
         </div>

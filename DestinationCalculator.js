@@ -1,9 +1,12 @@
 var interval;
-var elapsedTimeEverySecond;
-var totalDistance = 0; // Initialize total distance
+var elapsedTimeEverySecond = 0;
+var totalDistance = 0; // Initialize total distance;
+var lastStartTime;
+var isContinue = false;
 
 
 document.getElementById("stopInfo").style.display = 'none';
+document.getElementById("fuelAndTimeInfo").style.display = 'none';
 //calculate distance part
 const distances = {
     KoreaSoftwareHRDCenter_AeonMallSenSok: 370,
@@ -41,10 +44,69 @@ function updateTotalDistance() {
 }
 
 
+//calculate the time and distannce travel part base on time
+document.getElementById('btnStart').addEventListener('click', function () {
+    if (!interval || isContinue) {
+        lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
+
+        //Reset Flag
+        isContinue = false;
+
+        interval = setInterval(function () {
+            elapsedTimeEverySecond = Math.floor((new Date().getTime() - lastStartTime) / 1000);
+
+            // update the display time
+            document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
+
+            // totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
+            document.getElementById('stopInfo').style.display = 'none';
+            document.getElementById('fuelAndTimeInfo').style.display = 'none';
+
+
+        }, 1000)
+    }
+});
+
+
+
+document.getElementById("btnStop").addEventListener("click", function () {
+    clearInterval(interval);
+    interval = null;
+    // Update the displayed total distance
+    document.getElementById('distanceTravel').innerText = totalDistance + " Km";
+    // Display the total distance in the stopInfo div
+    document.getElementById("stopInfo").style.display = 'block';
+
+    //Display the RemainingTimeUntilArrival and the RemaingFuel
+    document.getElementById("fuelAndTimeInfo").style.display = 'flex';
+
+    // Display the total distance in the stopInfo div
+    document.getElementById("stopInfo").innerHTML = '<p>Distance Travel : <span id="distanceTravel">' + totalDistance + '</span> Km</p>';
+
+    //Display the remaining time until arrival
+    document.getElementById("RemainingTime").innerText = calculateRemaingTimeUntilArrival()
+
+    const avgSpeed = parseFloat(document.getElementById('avgSpeed').value);
+
+    totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
+
+    document.getElementById('distanceTravel').innerText = totalDistance;
+
+
+    //Display the remaining Fuel Level 
+    const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
+    calculateReamingFuel(fuelEffiency, elapsedTimeEverySecond);
+
+    checkFuelLevel();
+});
+
+
 document.getElementById("btnClear").addEventListener("click", function () {
     // Clear the interval if it's running
     clearInterval(interval);
 
+    interval = null;
+    elapsedTimeEverySecond = 0;
     // Reset all values to their initial state
     document.getElementById("countTime").innerText = "";
     document.getElementById("distanceTravel").innerText = "0 ";
@@ -55,58 +117,19 @@ document.getElementById("btnClear").addEventListener("click", function () {
     document.getElementById("fuelEffiency").value = ""
     document.getElementById("stopInfo").style.display = 'none';
     document.getElementById('RemainingTime').innerText = '0h 0m 0s';
-    document.getElementById('remainingFuel').innerText =  '0';
-    document.getElementById('currentFuelLevel').value =  0;
+    document.getElementById('remainingFuel').innerText = '0';
+    document.getElementById('currentFuelLevel').value = 0;
+
+
+    document.getElementById('stopInfo').style.display = 'none';
+    document.getElementById('fuelAndTimeInfo').style.display = 'none';
 });
-
-
-//calculate the time and distannce travel part base on time
-document.getElementById('btnStart').addEventListener('click', function () {
-    var startTime = new Date().getTime();
-    const avgSpeed = parseFloat(document.getElementById('avgSpeed').value);
-
-    interval = setInterval(function () {
-
-        elapsedTimeEverySecond = Math.floor((new Date().getTime() - startTime) / 1000);
-
-        //update the display time
-        document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
-
-        totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
-
-
-        document.getElementById('distanceTravel').innerText = totalDistance + "Km";
-
-    }, 1000)
-
-
-
-    document.getElementById("btnStop").addEventListener("click", function () {
-        clearInterval(interval);
-        // Update the displayed total distance
-        document.getElementById('distanceTravel').innerText = totalDistance + " Km";
-        // Display the total distance in the stopInfo div
-        document.getElementById("stopInfo").style.display = 'block';
-        // Display the total distance in the stopInfo div
-        document.getElementById("stopInfo").innerHTML = '<p>Distance Travel : <span id="distanceTravel">' + totalDistance + '</span> Km</p>';
-
-        //Display the remaining time until arrival
-        document.getElementById("RemainingTime").innerText = calculateRemaingTimeUntilArrival()
-
-
-        //Displau the remaining Fuel Level 
-        const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
-
-        calculateReamingFuel(fuelEffiency, elapsedTimeEverySecond);
-
-    });
-})
 
 
 
 //calculate the distance travel base on average speed and duration travel
 const calculateDistance = (avgSpeed, second) => {
-    const distance = (((avgSpeed * second).toFixed(2)) / 3600).toFixed(2);
+    const distance = (avgSpeed * second / 3600).toFixed(2);
     return distance
 }
 
@@ -140,13 +163,8 @@ const calculateRemaingTimeUntilArrival = () => {
 //calculate the remaining fuel
 const calculateReamingFuel = (fuelEffiency, elapsedTime) => {
 
-
-    console.log("elapsed Time  : ", elapsedTime)
     const fuelEffiencyToSeconds = fuelEffiency / 3600;
     const fuelConsumed = fuelEffiencyToSeconds * elapsedTime;
-
-    console.log("fuel effiency to second ", fuelEffiencyToSeconds)
-    console.log("fuel Consumed ", fuelConsumed)
 
     const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
 
@@ -156,6 +174,55 @@ const calculateReamingFuel = (fuelEffiency, elapsedTime) => {
 
     return remainingFuel;
 }
+
+
+
+//function to check the fuel level
+function checkFuelLevel() {
+    const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
+
+    if (currentFuelLevel <= 0) {
+        showFuelAlert()
+    }
+}
+
+
+
+//Function to show the pop up alert 
+function showFuelAlert() {
+    Swal.fire({
+        title: 'Fuel Level Empty!',
+        text: 'Your current fuel level has run out. Please enter a new current fuel level:',
+        input: 'text',
+        inputAttributes: {
+            autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        showLoaderOnConfirm: true,
+        preConfirm: (newFuelLevel) => {
+            return new Promise((resolve) => {
+                const parsedFuelLevel = parseFloat(newFuelLevel);
+                if (!isNaN(parsedFuelLevel)) {
+                    // Resolve with the new fuel level
+                    resolve(parsedFuelLevel);
+                } else {
+                    // Reject with an error message
+                    Swal.showValidationMessage('Invalid input. Please enter a valid number for the new fuel level.');
+                }
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Do something with the new fuel level (e.g., update the UI or perform calculations)
+            console.log("New Fuel Level:", result.value);
+        } else {
+            console.log("User canceled the input.");
+        }
+    });
+}
+
 
 
 
