@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Gas Usage Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -18,8 +17,8 @@
             }
         }
     </script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.6.0/dist/full.min.css" rel="stylesheet" type="text/css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -28,52 +27,60 @@
 
     <div class="w-[700px] p-10 mx-auto bg-gray-100 rounded-lg">
         <div class="flex justify-between">
+
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
+                <label class="block mb-2 text-sm font-medium text-gray-900">Select a
                     Start
                     Point</label>
                 <select id="startPoint"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-10">
-                    <option selected disabled hidden>Choose a Start Point</option>
+                    class="select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 0 block w-full px-10">
+                    <option selected value="" disabled hidden>Choose a Start Point</option>
                     <option value="KoreaSoftwareHRDCenter">Korea Software HRD Center</option>
                     <option value="RiverSide">River Side</option>
                     <option value="PochentongAirport">Pochentong Airport</option>
                     <option value="AeonMall1">Aeon Mall 1</option>
                 </select>
+                <span id="error-select1" class="text-red-500 text-sm"></span>
             </div>
+
             <div class="text-center py-8">
                 <h1>To</h1>
             </div>
+
             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
+                <label class="block mb-2 text-sm font-medium text-gray-900 ">Select a
                     Endpoint</label>
                 <select id="endPoint"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-10">
-                    <option selected disabled hidden>Choose a End Point</option>
+                    class="select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full px-10">
+                    <option selected value="" disabled hidden>Choose a End Point</option>
                     <option value="AeonMallSenSok">Aeon Mall Sen Sok</option>
                     <option value="AmazonKPK">Amazon KPK</option>
                     <option value="PidaoCafe">Pidao Cafe</option>
                     <option value="EdenGarden">Eden Garden</option>
                 </select>
+                <span id="error-select2" class="text-red-500 text-sm"></span>
             </div>
         </div>
 
-        <div class="w-full flex">
+        <div class="w-full flex py-4">
             <span>Total Distination :</span>
             <span class="px-10" id="totalDistance">0 km</span>
         </div>
 
 
         <div class="my-5">
-            <input type="text" placeholder="0 km/h" id="avgSpeed" class="rounded-lg px">
+            <input autocomplete="off" type="text" placeholder="0 km/h" id="avgSpeed"
+                class="input input-bordered rounded-lg px">
             <label class="px-5">Average Speed</label>
         </div>
         <div class="my-5">
-            <input type="text" id="fuelEffiency" class="rounded-lg px" placeholder="0 liters/h">
+            <input autocomplete="off" type="text" id="fuelEffiency" class="input input-bordered rounded-lg px"
+                placeholder="0 liters/h">
             <label class="px-5">Fuel Efficiency</label>
         </div>
         <div class="my-5">
-            <input type="text" id="currentFuelLevel" class="rounded-lg px" placeholder="0 liters">
+            <input autocomplete="off" type="text" id="currentFuelLevel" class="input input-bordered rounded-lg px"
+                placeholder="0 liters">
             <label class="px-5">Current Fuel Level</label>
         </div>
 
@@ -108,6 +115,27 @@
                 class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Clear</button>
         </div>
     </div>
+
+    <div id="fuelAlertModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black opacity-75"></div>
+        <div class="bg-white p-8 rounded-lg z-10">
+            <h2 class="text-2xl font-bold mb-4">Fuel Level Empty!</h2>
+            <p>Your current fuel level has run out. Please enter a new current fuel level</p>
+            <div class="w-full mx-auto">
+
+                <div class="flex justify-center py-2 w-full">
+                    <input type="text" id="newFuelLevelInput" class="w-[400px] input input-bordered border px-5 mt-2"
+                        placeholder="New Fuel Level">
+                </div>
+
+                <div class="flex justify-center items-center">
+                    <button id="submitFuelLevel"
+                        class="btn hover:bg-green-700 bg-green-500 text-white p-2 mt-4">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
 

@@ -3,6 +3,13 @@ var elapsedTimeEverySecond = 0;
 var totalDistance = 0; // Initialize total distance;
 var lastStartTime;
 var isContinue = false;
+var remainingFuel;
+
+if(document.getElementById("startPoint").value != ''){
+    document.getElementById('error-select1').textContent = '';
+}
+
+
 
 
 document.getElementById("stopInfo").style.display = 'none';
@@ -43,31 +50,70 @@ function updateTotalDistance() {
     }
 }
 
-
 //calculate the time and distannce travel part base on time
 document.getElementById('btnStart').addEventListener('click', function () {
-    if (!interval || isContinue) {
-        lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
 
-        //Reset Flag
-        isContinue = false;
+    var startPoint = document.getElementById("startPoint").value;
+    var errorSelect1 = document.getElementById('error-select1');
 
-        interval = setInterval(function () {
-            elapsedTimeEverySecond = Math.floor((new Date().getTime() - lastStartTime) / 1000);
-
-            // update the display time
-            document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
-
-            // totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
-            document.getElementById('stopInfo').style.display = 'none';
-            document.getElementById('fuelAndTimeInfo').style.display = 'none';
+    var endPoint = document.getElementById("endPoint").value;
+    var errorSeelct2 = document.getElementById("error-select2")
 
 
-        }, 1000)
+    if (startPoint === '') {
+        errorSelect1.textContent = 'Please select a start point.';
+        return;
+    } else {
+        errorSelect1.textContent = '';
+        if (!interval || isContinue) {
+            lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
+
+            //Reset Flag
+            isContinue = false;
+
+            interval = setInterval(function () {
+                elapsedTimeEverySecond = Math.floor((new Date().getTime() - lastStartTime) / 1000);
+
+                // update the display time
+                document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
+
+                // totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
+                document.getElementById('stopInfo').style.display = 'none';
+                document.getElementById('fuelAndTimeInfo').style.display = 'none';
+
+
+            }, 1000)
+        }
     }
+
+    if (endPoint === '') {
+        errorSeelct2.textContent = "Please select an endpoint";
+        return
+    } else {
+        errorSelect1.textContent = '';
+        if (!interval || isContinue) {
+            lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
+
+            //Reset Flag
+            isContinue = false;
+
+            interval = setInterval(function () {
+                elapsedTimeEverySecond = Math.floor((new Date().getTime() - lastStartTime) / 1000);
+
+                // update the display time
+                document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
+
+                // totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
+                document.getElementById('stopInfo').style.display = 'none';
+                document.getElementById('fuelAndTimeInfo').style.display = 'none';
+
+
+            }, 1000)
+        }
+    }
+
+
 });
-
-
 
 document.getElementById("btnStop").addEventListener("click", function () {
     clearInterval(interval);
@@ -97,9 +143,10 @@ document.getElementById("btnStop").addEventListener("click", function () {
     const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
     calculateReamingFuel(fuelEffiency, elapsedTimeEverySecond);
 
+
+
     checkFuelLevel();
 });
-
 
 document.getElementById("btnClear").addEventListener("click", function () {
     // Clear the interval if it's running
@@ -125,15 +172,11 @@ document.getElementById("btnClear").addEventListener("click", function () {
     document.getElementById('fuelAndTimeInfo').style.display = 'none';
 });
 
-
-
 //calculate the distance travel base on average speed and duration travel
 const calculateDistance = (avgSpeed, second) => {
     const distance = (avgSpeed * second / 3600).toFixed(2);
     return distance
 }
-
-
 
 //Calculate the remaining time until arrival
 const calculateRemaingTimeUntilArrival = () => {
@@ -159,7 +202,6 @@ const calculateRemaingTimeUntilArrival = () => {
     }
 }
 
-
 //calculate the remaining fuel
 const calculateReamingFuel = (fuelEffiency, elapsedTime) => {
 
@@ -168,62 +210,51 @@ const calculateReamingFuel = (fuelEffiency, elapsedTime) => {
 
     const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
 
-    const remainingFuel = Math.max(currentFuelLevel - fuelConsumed, 0);
+    remainingFuel = Math.max(currentFuelLevel - fuelConsumed, 0);
 
-    document.getElementById('remainingFuel').innerText = remainingFuel.toFixed(2) + "Liters";
+    document.getElementById('remainingFuel').innerText = remainingFuel.toFixed(2);
 
     return remainingFuel;
 }
 
-
-
 //function to check the fuel level
 function checkFuelLevel() {
-    const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
 
-    if (currentFuelLevel <= 0) {
-        showFuelAlert()
+
+    const remainingFuelLevel = parseFloat(document.getElementById("remainingFuel").textContent);
+
+    console.log("remaining fuel level : ", remainingFuelLevel)
+
+    if (remainingFuelLevel <= 0) {
+        showFuelAlertModal()
     }
 }
 
-
-
-//Function to show the pop up alert 
-function showFuelAlert() {
-    Swal.fire({
-        title: 'Fuel Level Empty!',
-        text: 'Your current fuel level has run out. Please enter a new current fuel level:',
-        input: 'text',
-        inputAttributes: {
-            autocapitalize: 'off'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Submit',
-        showLoaderOnConfirm: true,
-        preConfirm: (newFuelLevel) => {
-            return new Promise((resolve) => {
-                const parsedFuelLevel = parseFloat(newFuelLevel);
-                if (!isNaN(parsedFuelLevel)) {
-                    // Resolve with the new fuel level
-                    resolve(parsedFuelLevel);
-                } else {
-                    // Reject with an error message
-                    Swal.showValidationMessage('Invalid input. Please enter a valid number for the new fuel level.');
-                }
-            });
-        },
-        allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Do something with the new fuel level (e.g., update the UI or perform calculations)
-            console.log("New Fuel Level:", result.value);
-        } else {
-            console.log("User canceled the input.");
-        }
-    });
+function showFuelAlertModal() {
+    document.getElementById("fuelAlertModal").classList.remove('hidden');
 }
 
+function hideFuelAlertModal() {
+    document.getElementById('fuelAlertModal').classList.add("hidden")
+}
 
+function submitFuelLevel() {
+    const newFuelLevel = parseFloat(document.getElementById("newFuelLevelInput").value)
+
+    if (!isNaN(newFuelLevel)) {
+        document.getElementById("currentFuelLevel").value = newFuelLevel;
+    } else {
+        console.log("Invalid Input. Please Enter a valid number.")
+    }
+
+    console.log(remainingFuel)
+}
+
+document.getElementById("submitFuelLevel").addEventListener("click", function () {
+    submitFuelLevel()
+
+    document.getElementById("fuelAlertModal").classList.add("hidden");
+})
 
 
 //time formatter
