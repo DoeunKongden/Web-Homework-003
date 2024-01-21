@@ -1,3 +1,5 @@
+
+
 var interval;
 var elapsedTimeEverySecond = 0;
 var totalDistance = 0; // Initialize total distance;
