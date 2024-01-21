@@ -1,5 +1,3 @@
-
-
 var interval;
 var elapsedTimeEverySecond = 0;
 var totalDistance = 0; // Initialize total distance;
@@ -73,7 +71,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
     })
 
     document.getElementById('endPoint').addEventListener('change', function () {
-        if (this.value){
+        if (this.value) {
             errorSeelct2.textContent = '';
         }
     })
@@ -255,6 +253,49 @@ document.getElementById("submitFuelLevel").addEventListener("click", function ()
 
     document.getElementById("fuelAlertModal").classList.add("hidden");
 })
+
+
+
+document.getElementById('avgSpeed').addEventListener('keyup', function () {
+    var inputValue = this.value;
+    var errorAvgSpeed = document.getElementById('errorAvgSpeed');
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorAvgSpeed.textContent = 'Please Enter Number Only.';
+    } else {
+        errorAvgSpeed.textContent = '';
+    }
+})
+
+document.getElementById('fuelEffiency').addEventListener('keyup', function(){
+    var inputValue = this.value;
+    var errorFuelEffiecny = document.getElementById('errorFuelEffiecny');
+
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorFuelEffiecny.textContent = 'Please Enter Number Only.';
+    } else {
+        errorFuelEffiecny.textContent = '';
+    }
+})
+
+document.getElementById('currentFuelLevel').addEventListener('keyup', function(){
+    var inputValue = this.value;
+    var errorFuelEffiecny = document.getElementById('errorCurrentFuelLevel');
+
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorCurrentFuelLevel.textContent = 'Please Enter Number Only.';
+    } else {
+        errorCurrentFuelLevel.textContent = '';
+    }
+})
+
+
+
 
 
 //time formatter
