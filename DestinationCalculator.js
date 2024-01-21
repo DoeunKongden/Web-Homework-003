@@ -5,7 +5,7 @@ var lastStartTime;
 var isContinue = false;
 var remainingFuel;
 
-if(document.getElementById("startPoint").value != ''){
+if (document.getElementById("startPoint").value != '') {
     document.getElementById('error-select1').textContent = '';
 }
 
@@ -57,14 +57,35 @@ document.getElementById('btnStart').addEventListener('click', function () {
     var errorSelect1 = document.getElementById('error-select1');
 
     var endPoint = document.getElementById("endPoint").value;
-    var errorSeelct2 = document.getElementById("error-select2")
+    var errorSeelct2 = document.getElementById("error-select2");
+
+    //Reseting previous error message;
+    errorSelect1.textContent = '';
+    errorSeelct2.textContent = '';
 
 
-    if (startPoint === '') {
-        errorSelect1.textContent = 'Please select a start point.';
-        return;
+    document.getElementById('startPoint').addEventListener('change', function () {
+        if (this.value) {
+            errorSelect1.textContent = '';
+        }
+    })
+
+    document.getElementById('endPoint').addEventListener('change', function () {
+        if (this.value){
+            errorSeelct2.textContent = '';
+        }
+    })
+
+
+
+    if (!startPoint || !endPoint) {
+        if (!startPoint) {
+            errorSelect1.textContent = 'Please select a start point.';
+        }
+        if (!endPoint) {
+            errorSeelct2.textContent = 'Please select an end point.';
+        }
     } else {
-        errorSelect1.textContent = '';
         if (!interval || isContinue) {
             lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
 
@@ -86,31 +107,8 @@ document.getElementById('btnStart').addEventListener('click', function () {
         }
     }
 
-    if (endPoint === '') {
-        errorSeelct2.textContent = "Please select an endpoint";
-        return
-    } else {
-        errorSelect1.textContent = '';
-        if (!interval || isContinue) {
-            lastStartTime = new Date().getTime() - elapsedTimeEverySecond * 1000;
-
-            //Reset Flag
-            isContinue = false;
-
-            interval = setInterval(function () {
-                elapsedTimeEverySecond = Math.floor((new Date().getTime() - lastStartTime) / 1000);
-
-                // update the display time
-                document.getElementById('countTime').innerText = formatTime(elapsedTimeEverySecond);
-
-                // totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
-                document.getElementById('stopInfo').style.display = 'none';
-                document.getElementById('fuelAndTimeInfo').style.display = 'none';
 
 
-            }, 1000)
-        }
-    }
 
 
 });
