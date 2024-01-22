@@ -71,7 +71,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
     })
 
     document.getElementById('endPoint').addEventListener('change', function () {
-        if (this.value){
+        if (this.value) {
             errorSeelct2.textContent = '';
         }
     })
@@ -116,8 +116,10 @@ document.getElementById('btnStart').addEventListener('click', function () {
 document.getElementById("btnStop").addEventListener("click", function () {
     clearInterval(interval);
     interval = null;
+    
     // Update the displayed total distance
     document.getElementById('distanceTravel').innerText = totalDistance + " Km";
+
     // Display the total distance in the stopInfo div
     document.getElementById("stopInfo").style.display = 'block';
 
@@ -142,7 +144,6 @@ document.getElementById("btnStop").addEventListener("click", function () {
     calculateReamingFuel(fuelEffiency, elapsedTimeEverySecond);
 
 
-
     checkFuelLevel();
 });
 
@@ -153,17 +154,17 @@ document.getElementById("btnClear").addEventListener("click", function () {
     interval = null;
     elapsedTimeEverySecond = 0;
     // Reset all values to their initial state
-    document.getElementById("countTime").innerText = "";
-    document.getElementById("distanceTravel").innerText = "0 ";
+    document.getElementById("countTime").innerText = "0h 0m 0s";
+    document.getElementById("distanceTravel").innerText = "0";
     document.getElementById("avgSpeed").value = "";
     document.getElementById("startPoint").selectedIndex = 0;
     document.getElementById("endPoint").selectedIndex = 0;
-    document.getElementById("totalDistance").innerHTML = "0 ";
+    document.getElementById("totalDistance").innerHTML = "0 km";
     document.getElementById("fuelEffiency").value = ""
     document.getElementById("stopInfo").style.display = 'none';
     document.getElementById('RemainingTime').innerText = '0h 0m 0s';
     document.getElementById('remainingFuel').innerText = '0';
-    document.getElementById('currentFuelLevel').value = 0;
+    document.getElementById('currentFuelLevel').value = '';
 
 
     document.getElementById('stopInfo').style.display = 'none';
@@ -253,6 +254,62 @@ document.getElementById("submitFuelLevel").addEventListener("click", function ()
 
     document.getElementById("fuelAlertModal").classList.add("hidden");
 })
+
+
+
+document.getElementById('avgSpeed').addEventListener('keyup', function () {
+    var inputValue = this.value;
+    var errorAvgSpeed = document.getElementById('errorAvgSpeed');
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorAvgSpeed.textContent = 'Please Enter Number Only.';
+    } else {
+        errorAvgSpeed.textContent = '';
+    }
+})
+
+document.getElementById('fuelEffiency').addEventListener('keyup', function () {
+    var inputValue = this.value;
+    var errorFuelEffiecny = document.getElementById('errorFuelEffiecny');
+
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorFuelEffiecny.textContent = 'Please Enter Number Only.';
+    } else {
+        errorFuelEffiecny.textContent = '';
+    }
+})
+
+document.getElementById('currentFuelLevel').addEventListener('keyup', function () {
+    var inputValue = this.value;
+    var errorCurrentFuelLevel = document.getElementById('errorCurrentFuelLevel');
+
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorCurrentFuelLevel.textContent = 'Please Enter Number Only.';
+    } else {
+        errorCurrentFuelLevel.textContent = '';
+    }
+})
+
+document.getElementById('newFuelLevelInput').addEventListener('keyup', function () {
+    var inputValue = this.value;
+    var errorNewFuelLevel = document.getElementById('errorNewFuelLevel');
+
+    var regex = /^\d*\.?\d*$/;
+
+    if (!regex.test(inputValue)) {
+        errorNewFuelLevel.textContent = 'Please Enter Number Only.';
+    } else {
+        errorNewFuelLevel.textContent = '';
+    }
+})
+
+
+
 
 
 //time formatter

@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Gas Usage Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -72,16 +76,27 @@
             <input autocomplete="off" type="text" placeholder="0 km/h" id="avgSpeed"
                 class="input input-bordered rounded-lg px">
             <label class="px-5">Average Speed</label>
+            <div>
+                <span id="errorAvgSpeed" class="text-red-500 text-sm"></span>
+            </div>
         </div>
+
         <div class="my-5">
             <input autocomplete="off" type="text" id="fuelEffiency" class="input input-bordered rounded-lg px"
                 placeholder="0 liters/h">
             <label class="px-5">Fuel Efficiency</label>
+            <div>
+                <span id="errorFuelEffiecny" class="text-red-500 text-sm"></span>
+            </div>
         </div>
         <div class="my-5">
             <input autocomplete="off" type="text" id="currentFuelLevel" class="input input-bordered rounded-lg px"
                 placeholder="0 liters">
             <label class="px-5">Current Fuel Level</label>
+
+            <div>
+                <span id="errorCurrentFuelLevel" class="text-red-500 text-sm"></span>
+            </div>
         </div>
 
 
@@ -123,9 +138,12 @@
             <p>Your current fuel level has run out. Please enter a new current fuel level</p>
             <div class="w-full mx-auto">
 
-                <div class="flex justify-center py-2 w-full">
+                <div class=" justify-center py-2 w-full">
                     <input type="text" id="newFuelLevelInput" class="w-[400px] input input-bordered border px-5 mt-2"
                         placeholder="New Fuel Level">
+                    <div>
+                        <span id="errorNewFuelLevel"></span>
+                    </div>
                 </div>
 
                 <div class="flex justify-center items-center">
