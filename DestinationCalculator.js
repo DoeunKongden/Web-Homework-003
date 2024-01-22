@@ -141,6 +141,9 @@ document.getElementById("btnStop").addEventListener("click", function () {
     var errorCurrentFuelLevel = document.getElementById('errorCurrentFuelLevel');
 
 
+
+
+
     if (startPoint === '') {
         errorSelect1.textContent = 'Please select a start point.';
     }
@@ -185,10 +188,15 @@ document.getElementById("btnStop").addEventListener("click", function () {
         //Display the remaining Fuel Level 
         const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
 
+
+
         calculateReamingFuel(fuelEffiency, totalDistance);
+
 
         checkFuelLevel();
     }
+
+
 
     document.getElementById('startPoint').addEventListener('change', function () {
         if (this.value) {
@@ -240,12 +248,11 @@ const calculateDistance = (avgSpeed, second) => {
 
 //function to check the fuel level
 function checkFuelLevel() {
-
     const remainingFuelLevel = parseFloat(document.getElementById("remainingFuel").textContent);
-
     console.log("remaining fuel level : ", remainingFuelLevel)
 
     if (0.5 <= remainingFuelLevel && remainingFuelLevel <= 1) {
+        console.log("Inside the condition");
         showFuelAlertModal()
     }
 }
@@ -307,7 +314,10 @@ function submitFuelLevel() {
     const newFuelLevel = parseFloat(document.getElementById("newFuelLevelInput").value) + parseFloat(document.getElementById('remainingFuel').textContent)
 
     if (!isNaN(newFuelLevel)) {
-        document.getElementById("currentFuelLevel").value = Math.max( newFuelLevel,0);
+        document.getElementById("currentFuelLevel").value = Math.max(newFuelLevel, 0);
+
+        calculateReamingFuel(parseFloat(document.getElementById('fuelEffiency').value) , parseFloat(document.getElementById('distanceTravel').innerText));
+
         checkFuelLevel();
     } else {
         console.log("Invalid Input. Please Enter a valid number.")
