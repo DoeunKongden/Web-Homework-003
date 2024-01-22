@@ -186,6 +186,7 @@ document.getElementById("btnStop").addEventListener("click", function () {
         const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
 
         calculateReamingFuel(fuelEffiency, totalDistance);
+
         checkFuelLevel();
     }
 
@@ -237,6 +238,18 @@ const calculateDistance = (avgSpeed, second) => {
     return distance
 }
 
+//function to check the fuel level
+function checkFuelLevel() {
+
+    const remainingFuelLevel = parseFloat(document.getElementById("remainingFuel").textContent);
+
+    console.log("remaining fuel level : ", remainingFuelLevel)
+
+    if (0.5 <= remainingFuelLevel && remainingFuelLevel <= 1) {
+        showFuelAlertModal()
+    }
+}
+
 //Calculate the remaining time until arrival
 const calculateRemaingTimeUntilArrival = () => {
     const avgSpeed = parseFloat(document.getElementById('avgSpeed').value);
@@ -271,6 +284,8 @@ const calculateReamingFuel = (fuelEffiency, distanceTraveled) => {
 
     const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
 
+    console.log("Current Fuel Level : ", currentFuelLevel)
+
     remainingFuel = Math.max(currentFuelLevel - fuelConsumed, 0);
 
     document.getElementById('remainingFuel').innerText = remainingFuel.toFixed(2);
@@ -278,17 +293,7 @@ const calculateReamingFuel = (fuelEffiency, distanceTraveled) => {
     return remainingFuel;
 }
 
-//function to check the fuel level
-function checkFuelLevel() {
 
-    const remainingFuelLevel = parseFloat(document.getElementById("remainingFuel").textContent);
-
-    console.log("remaining fuel level : ", remainingFuelLevel)
-
-    if (0.5 <= remainingFuelLevel && remainingFuelLevel <= 1) {
-        showFuelAlertModal()
-    }
-}
 
 function showFuelAlertModal() {
     document.getElementById("fuelAlertModal").classList.remove('hidden');
@@ -302,7 +307,8 @@ function submitFuelLevel() {
     const newFuelLevel = parseFloat(document.getElementById("newFuelLevelInput").value) + parseFloat(document.getElementById('remainingFuel').textContent)
 
     if (!isNaN(newFuelLevel)) {
-        document.getElementById("currentFuelLevel").value = newFuelLevel;
+        document.getElementById("currentFuelLevel").value = Math.max( newFuelLevel,0);
+        checkFuelLevel();
     } else {
         console.log("Invalid Input. Please Enter a valid number.")
     }
