@@ -65,7 +65,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
 
 
     document.getElementById('startPoint').addEventListener('change', function () {
-        if (this.value) {
+        if (this.value) { .    
             errorSelect1.textContent = '';
         }
     })
