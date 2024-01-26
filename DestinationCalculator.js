@@ -5,12 +5,13 @@ var lastStartTime;
 var isContinue = false;
 var remainingFuel;
 
+
+//checking value state of previo us travel distance
+var x = 0;
+
 if (document.getElementById("startPoint").value != '') {
     document.getElementById('error-select1').textContent = '';
 }
-
-
-
 
 document.getElementById("stopInfo").style.display = 'none';
 document.getElementById("fuelAndTimeInfo").style.display = 'none';
@@ -61,7 +62,6 @@ document.getElementById('btnStart').addEventListener('click', function () {
 
 
     var endPoint = document.getElementById("endPoint").value;
-    var errorSeelct2 = document.getElementById("error-select2");
     var errorSelect1 = document.getElementById('error-select1');
     var errorSelect2 = document.getElementById('error-select2');
     var errorAvgSpeed = document.getElementById('errorAvgSpeed');
@@ -70,7 +70,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
 
     //Reseting previous error message;
     errorSelect1.textContent = '';
-    errorSeelct2.textContent = '';
+    errorSelect2.textContent = '';
 
 
     document.getElementById('startPoint').addEventListener('change', function () {
@@ -81,7 +81,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
 
     document.getElementById('endPoint').addEventListener('change', function () {
         if (this.value) {
-            errorSeelct2.textContent = '';
+            errorSelect2.textContent = '';
         }
     })
 
@@ -92,7 +92,7 @@ document.getElementById('btnStart').addEventListener('click', function () {
             errorSelect1.textContent = 'Please select a start point.';
         }
         if (!endPoint) {
-            errorSeelct2.textContent = 'Please select an end point.';
+            errorSelect2.textContent = 'Please select an end point.';
         }
     }
     else if (!avgSpeed) {
@@ -160,6 +160,7 @@ document.getElementById("btnStop").addEventListener("click", function () {
         errorCurrentFuelLevel.textContent = 'Please enter current fuel Level.';
     }
     else {
+
         clearInterval(interval);
         interval = null;
 
@@ -183,17 +184,22 @@ document.getElementById("btnStop").addEventListener("click", function () {
         totalDistance = calculateDistance(avgSpeed, elapsedTimeEverySecond);
 
         document.getElementById('distanceTravel').innerText = totalDistance;
+        calculateReamingFuel(fuelEffiency, totalDistance)
 
+        if (remainingFuel >= 0.5 && remainingFuel <= 1) {
+            showFuelAlertModal();
+        }
 
-        //Display the remaining Fuel Level 
-        const fuelEffiency = parseFloat(document.getElementById('fuelEffiency').value);
+        if (x) {
+            var currentDistance = parseFloat(document.getElementById('distanceTravel').textContent);
+            var newDistance = currentDistance - x;
+            calculateReamingFuel(fuelEffiency, newDistance);
+            if (remainingFuel >= 0.5 && remainingFuel <= 1){
+                showFuelAlertModal();
+            }
 
+        }
 
-
-        calculateReamingFuel(fuelEffiency, totalDistance);
-
-
-        checkFuelLevel();
     }
 
 
@@ -247,12 +253,9 @@ const calculateDistance = (avgSpeed, second) => {
 }
 
 //function to check the fuel level
-function checkFuelLevel() {
-    const remainingFuelLevel = parseFloat(document.getElementById("remainingFuel").textContent);
-    console.log("remaining fuel level : ", remainingFuelLevel)
-
-    if (0.5 <= remainingFuelLevel && remainingFuelLevel <= 1) {
-        console.log("Inside the condition");
+function checkFuelLevel(remainingFuelLevel) {
+    const numericRemainingFuelLevel = parseFloat(remainingFuelLevel)
+    if (!isNaN(numericRemainingFuelLevel) && (0.5 <= numericRemainingFuelLevel && numericRemainingFuelLevel <= 1)) {
         showFuelAlertModal()
     }
 }
@@ -283,15 +286,10 @@ const calculateRemaingTimeUntilArrival = () => {
 
 //calculate the remaining fuel
 const calculateReamingFuel = (fuelEffiency, distanceTraveled) => {
-
-    console.log("Fuel Effiency :", fuelEffiency)
-    console.log("Distance Travel :", distanceTraveled)
-
-    const fuelConsumed = distanceTraveled / fuelEffiency;
+    const fuelConsumed = distanceTraveled * fuelEffiency;
 
     const currentFuelLevel = parseFloat(document.getElementById("currentFuelLevel").value);
 
-    console.log("Current Fuel Level : ", currentFuelLevel)
 
     remainingFuel = Math.max(currentFuelLevel - fuelConsumed, 0);
 
@@ -306,30 +304,36 @@ function showFuelAlertModal() {
     document.getElementById("fuelAlertModal").classList.remove('hidden');
 }
 
+
+
+
 function hideFuelAlertModal() {
     document.getElementById('fuelAlertModal').classList.add("hidden")
 }
 
+
+
 function submitFuelLevel() {
-    const newFuelLevel = parseFloat(document.getElementById("newFuelLevelInput").value) + parseFloat(document.getElementById('remainingFuel').textContent)
+    const newFuelLevelInput = document.getElementById("newFuelLevelInput");
+    const remainingFuelElement = document.getElementById('remainingFuel');
+
+    const newFuelLevel = parseFloat(newFuelLevelInput.value) + parseFloat(remainingFuelElement.textContent);
 
     if (!isNaN(newFuelLevel)) {
         document.getElementById("currentFuelLevel").value = Math.max(newFuelLevel, 0);
-
-        calculateReamingFuel(parseFloat(document.getElementById('fuelEffiency').value) , parseFloat(document.getElementById('distanceTravel').innerText));
-
-        checkFuelLevel();
+        // Update x to be the total distance traveled
+        x = parseFloat(document.getElementById('distanceTravel').textContent);
     } else {
         console.log("Invalid Input. Please Enter a valid number.")
     }
-
-    console.log(remainingFuel)
 }
+
 
 document.getElementById("submitFuelLevel").addEventListener("click", function () {
     submitFuelLevel()
-
+    var fuelLevelInput = document.getElementById('newFuelLevelInput');
     document.getElementById("fuelAlertModal").classList.add("hidden");
+    fuelLevelInput.value = '';
 })
 
 
@@ -388,12 +392,10 @@ document.getElementById('newFuelLevelInput').addEventListener('keyup', function 
 
 
 
-
 //time formatter
 function formatTime(seconds) {
     var hours = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds % 3600) / 60);
     var remainingSeconds = Math.round(seconds % 60);
-
     return hours + "h " + minutes + "m " + remainingSeconds + "s";
 } 
